@@ -62,9 +62,9 @@ if (req.url.path ~ "^/(checkout|account|admin|api|csrf)(/.*)?$") {
 
 # Cache Store-API requests
 if (req.url.path ~ "^/store-api/.*?$" && req.url.path !~ "^/store-api/account/.*$" && req.method == "POST") {
+  set req.http.store-api-post = "1";
+  set req.method = "GET";
   if (req.body) {
-    set req.http.store-api-post = "1";
-    set req.method = "GET";
     set req.url = querystring.set(req.url, "j", urlencode(req.body));
   }
 }
