@@ -1,0 +1,19 @@
+# Remove the exact PHP Version from the response for more security (e.g. 404 pages)
+unset resp.http.x-powered-by;
+
+# Cache Store-API requests
+if (req.http.swhit == "1" || req.method == "GET") {
+  unset resp.http.Sw-Context-Token;
+  unset resp.http.sw-context-token;
+  unset resp.http.swhit;
+}
+
+# We use fastly.ff.visits_this_service to avoid running this logic on shield nodes. We only need to
+# run it on edge nodes
+if (fastly.ff.visits_this_service == 0 && resp.http.sw-invalidation-states) {
+  # invalidation headers are only for internal use
+  unset resp.http.sw-invalidation-states;
+
+  ## we don't want the client to cache
+  set resp.http.Cache-Control = "no-cache, private";
+}

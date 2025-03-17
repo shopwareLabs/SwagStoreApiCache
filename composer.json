@@ -1,0 +1,27 @@
+{
+    "name": "swag/store-api-cache",
+    "description": "Store API Cache",
+    "type": "shopware-platform-plugin",
+    "version": "1.0.0",
+    "license": "MIT",
+    "require": {
+        "shopware/core": "~6.5.0"
+    },
+    "extra": {
+        "shopware-plugin-class": "SwagStoreAPICache\\SwagStoreAPICache",
+        "label": {
+            "de-DE": "Store API Cache",
+            "en-GB": "Store API Cache"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "SwagStoreAPICache\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SwagStoreAPICache\\Tests\\": "tests/"
+        }
+    }
+}
