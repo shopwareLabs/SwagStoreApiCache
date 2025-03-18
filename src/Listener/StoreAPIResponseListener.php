@@ -24,6 +24,8 @@ use Shopware\Core\Framework\Adapter\Cache\Http\CacheStore;
 use Shopware\Core\Framework\Adapter\Cache\Http\HttpCacheKeyGenerator;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\PlatformRequest;
+use Shopware\Core\System\Country\SalesChannel\CountryRoute;
+use Shopware\Core\System\Language\SalesChannel\LanguageRoute;
 use Shopware\Core\System\SalesChannel\Event\SalesChannelContextSwitchEvent;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\Salutation\SalesChannel\SalutationRoute;
@@ -55,6 +57,8 @@ class StoreAPIResponseListener
         LandingPageRoute::class . '::load',
         NavigationRoute::class . '::load',
         SalutationRoute::class . '::load',
+        CountryRoute::class . '::load',
+        LanguageRoute::class . '::load',
     ];
 
     public function __construct(
