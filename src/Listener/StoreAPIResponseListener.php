@@ -7,13 +7,17 @@ use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Checkout\Payment\SalesChannel\PaymentMethodRoute;
 use Shopware\Core\Checkout\Shipping\SalesChannel\ShippingMethodRoute;
 use Shopware\Core\Content\Category\SalesChannel\CategoryRoute;
+use Shopware\Core\Content\Category\SalesChannel\NavigationRoute;
 use Shopware\Core\Content\Cms\SalesChannel\CmsRoute;
+use Shopware\Core\Content\LandingPage\SalesChannel\LandingPageRoute;
+use Shopware\Core\Content\Product\SalesChannel\CrossSelling\ProductCrossSellingRoute;
 use Shopware\Core\Content\Product\SalesChannel\Detail\ProductDetailRoute;
 use Shopware\Core\Content\Product\SalesChannel\Listing\ProductListingRoute;
 use Shopware\Core\Content\Product\SalesChannel\ProductListRoute;
 use Shopware\Core\Content\Product\SalesChannel\Review\ProductReviewRoute;
 use Shopware\Core\Content\Product\SalesChannel\Search\ProductSearchRoute;
 use Shopware\Core\Content\Product\SalesChannel\Suggest\ProductSuggestRoute;
+use Shopware\Core\Content\Seo\SalesChannel\SeoUrlRoute;
 use Shopware\Core\Content\Sitemap\SalesChannel\SitemapRoute;
 use Shopware\Core\Framework\Adapter\Cache\AbstractCacheTracer;
 use Shopware\Core\Framework\Adapter\Cache\Http\CacheStore;
@@ -22,6 +26,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\PlatformRequest;
 use Shopware\Core\System\SalesChannel\Event\SalesChannelContextSwitchEvent;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use Shopware\Core\System\Salutation\SalesChannel\SalutationRoute;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -45,6 +50,11 @@ class StoreAPIResponseListener
         PaymentMethodRoute::class . '::load',
         ShippingMethodRoute::class . '::load',
         SitemapRoute::class . '::load',
+        SeoUrlRoute::class . '::load',
+        ProductCrossSellingRoute::class . '::load',
+        LandingPageRoute::class . '::load',
+        NavigationRoute::class . '::load',
+        SalutationRoute::class . '::load',
     ];
 
     public function __construct(
