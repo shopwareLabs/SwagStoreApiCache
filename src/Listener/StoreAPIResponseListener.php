@@ -40,25 +40,43 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class StoreAPIResponseListener
 {
-    private const WHITELIST_STORE_API_CONTROLLER = [
-        ProductDetailRoute::class . '::load',
-        ProductListingRoute::class . '::load',
-        ProductListRoute::class . '::load',
-        ProductReviewRoute::class . '::load',
-        ProductSearchRoute::class . '::load',
-        ProductSuggestRoute::class . '::load',
-        CategoryRoute::class . '::load',
-        CmsRoute::class . '::load',
-        PaymentMethodRoute::class . '::load',
-        ShippingMethodRoute::class . '::load',
-        SitemapRoute::class . '::load',
-        SeoUrlRoute::class . '::load',
-        ProductCrossSellingRoute::class . '::load',
-        LandingPageRoute::class . '::load',
-        NavigationRoute::class . '::load',
-        SalutationRoute::class . '::load',
-        CountryRoute::class . '::load',
-        LanguageRoute::class . '::load',
+    private const WHITELIST_CACHEABLE_STORE_API_ROUTES = [
+        /** @see ProductDetailRoute::load() */
+        'store-api.product.detail',
+        /** @see ProductListingRoute::load() */
+        'store-api.product.listing',
+        /** @see ProductListRoute::load() */
+        'store-api.product.search',
+        /** @see ProductReviewRoute::load() */
+        'store-api.product-review.list',
+        /** @see ProductSearchRoute::load() */
+        'store-api.search',
+        /** @see ProductSuggestRoute::load() */
+        'store-api.search.suggest',
+        /** @see CategoryRoute::load() */
+        'store-api.category.detail',
+        /** @see CmsRoute::load() */
+        'store-api.cms.detail',
+        /** @see PaymentMethodRoute::load() */
+        'store-api.payment.method',
+        /** @see ShippingMethodRoute::load() */
+        'store-api.shipping.method',
+        /** @see SitemapRoute::load() */
+        'store-api.sitemap',
+        /** @see SeoUrlRoute::load() */
+        'store-api.seo.url',
+        /** @see ProductCrossSellingRoute::load() */
+        'store-api.product.cross-selling',
+        /** @see LandingPageRoute::load() */
+        'store-api.landing-page.detail',
+        /** @see NavigationRoute::load() */
+        'store-api.navigation',
+        /** @see SalutationRoute::load() */
+        'store-api.salutation',
+        /** @see CountryRoute::load() */
+        'store-api.country',
+        /** @see LanguageRoute::load() */
+        'store-api.language',
     ];
 
     public function __construct(
@@ -72,9 +90,9 @@ class StoreAPIResponseListener
     #[AsEventListener(KernelEvents::RESPONSE)]
     public function __invoke(ResponseEvent $event): void
     {
-        $controllerClass = $event->getRequest()->attributes->get('_controller', '');
+        $route = $event->getRequest()->attributes->get('_route', '');
 
-        if (!\in_array($controllerClass, self::WHITELIST_STORE_API_CONTROLLER, true)) {
+        if (!\in_array($route, self::WHITELIST_CACHEABLE_STORE_API_ROUTES, true)) {
             return;
         }
 
