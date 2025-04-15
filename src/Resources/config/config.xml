@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+    <card>
+        <title>Store API Cache Settings</title>
+        <title lang="de-DE">Store API Cache Einstellungen</title>
+        <input-field>
+            <name>additionalCacheableRoutes</name>
+            <label>Additional Cacheable Routes</label>
+            <label lang="de-DE">Zusätzliche Cachebare Routen</label>
+            <helpText>Enter additional Store API routes that should be cached, one route per line.</helpText>
+            <helpText lang="de-DE">Geben Sie zusätzliche Store API Routen ein, die gecached werden sollen, eine Route pro Zeile.</helpText>
+            <type>textarea</type>
+            <defaultValue></defaultValue>
+        </input-field>
+    </card>
+</config> 
