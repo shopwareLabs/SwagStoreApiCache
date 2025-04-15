@@ -102,7 +102,7 @@ class StoreAPIResponseListener
         ];
 
         // Add additional routes from configuration
-        $additionalRoutes = $this->systemConfigService->getString(SwagStoreAPICache::CONFIG_KEY);
+        $additionalRoutes = $this->systemConfigService->getString('SwagStoreAPICache.config.additionalCacheableRoutes');
         if (!empty($additionalRoutes)) {
             $additionalRoutes = array_filter(
                 array_map('trim', explode("\n", $additionalRoutes)),
