@@ -25,6 +25,10 @@ use Shopware\Core\Framework\Adapter\Cache\Http\HttpCacheKeyGenerator;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\PlatformRequest;
 use Shopware\Core\System\Country\SalesChannel\CountryRoute;
+use Shopware\Core\System\Country\SalesChannel\CountryStateRoute;
+use Shopware\Core\System\Currency\SalesChannel\CurrencyRoute;
+use Shopware\Core\Checkout\Customer\SalesChannel\CustomerGroupRegistrationSettingsRoute;
+use Shopware\Core\Content\Product\SalesChannel\FindVariant\FindProductVariantRoute;
 use Shopware\Core\System\Language\SalesChannel\LanguageRoute;
 use Shopware\Core\System\SalesChannel\Event\SalesChannelContextSwitchEvent;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -77,6 +81,14 @@ class StoreAPIResponseListener
         'store-api.country',
         /** @see LanguageRoute::load() */
         'store-api.language',
+        /** @see CountryStateRoute::load() */
+        'store-api.country.state',
+        /** @see CurrencyRoute::load() */
+        'store-api.currency',
+        /** @see CustomerGroupRegistrationSettingsRoute::load() */
+        'store-api.customer-group-registration.config',
+        /** @see FindProductVariantRoute::load() */
+        'store-api.product.find-variant'
     ];
 
     public function __construct(
