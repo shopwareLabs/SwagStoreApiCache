@@ -41,61 +41,85 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
+use SwagStoreAPICache\SwagStoreAPICache;
 
 class StoreAPIResponseListener
 {
-    private const WHITELIST_CACHEABLE_STORE_API_ROUTES = [
-        /** @see ProductDetailRoute::load() */
-        'store-api.product.detail',
-        /** @see ProductListingRoute::load() */
-        'store-api.product.listing',
-        /** @see ProductListRoute::load() */
-        'store-api.product.search',
-        /** @see ProductReviewRoute::load() */
-        'store-api.product-review.list',
-        /** @see ProductSearchRoute::load() */
-        'store-api.search',
-        /** @see ProductSuggestRoute::load() */
-        'store-api.search.suggest',
-        /** @see CategoryRoute::load() */
-        'store-api.category.detail',
-        /** @see CmsRoute::load() */
-        'store-api.cms.detail',
-        /** @see PaymentMethodRoute::load() */
-        'store-api.payment.method',
-        /** @see ShippingMethodRoute::load() */
-        'store-api.shipping.method',
-        /** @see SitemapRoute::load() */
-        'store-api.sitemap',
-        /** @see SeoUrlRoute::load() */
-        'store-api.seo.url',
-        /** @see ProductCrossSellingRoute::load() */
-        'store-api.product.cross-selling',
-        /** @see LandingPageRoute::load() */
-        'store-api.landing-page.detail',
-        /** @see NavigationRoute::load() */
-        'store-api.navigation',
-        /** @see SalutationRoute::load() */
-        'store-api.salutation',
-        /** @see CountryRoute::load() */
-        'store-api.country',
-        /** @see LanguageRoute::load() */
-        'store-api.language',
-        /** @see CountryStateRoute::load() */
-        'store-api.country.state',
-        /** @see CurrencyRoute::load() */
-        'store-api.currency',
-        /** @see CustomerGroupRegistrationSettingsRoute::load() */
-        'store-api.customer-group-registration.config',
-        /** @see FindProductVariantRoute::load() */
-        'store-api.product.find-variant'
-    ];
+    /**
+     * Returns an array of Store API routes that should be cached.
+     * Override this method in child classes to add additional cacheable routes.
+     *
+     * @return array<string>
+     */
+    public function getCacheableStoreApiRoutes(): array
+    {
+        $routes = [
+            /** @see ProductDetailRoute::load() */
+            'store-api.product.detail',
+            /** @see ProductListingRoute::load() */
+            'store-api.product.listing',
+            /** @see ProductListRoute::load() */
+            'store-api.product.search',
+            /** @see ProductReviewRoute::load() */
+            'store-api.product-review.list',
+            /** @see ProductSearchRoute::load() */
+            'store-api.search',
+            /** @see ProductSuggestRoute::load() */
+            'store-api.search.suggest',
+            /** @see CategoryRoute::load() */
+            'store-api.category.detail',
+            /** @see CmsRoute::load() */
+            'store-api.cms.detail',
+            /** @see PaymentMethodRoute::load() */
+            'store-api.payment.method',
+            /** @see ShippingMethodRoute::load() */
+            'store-api.shipping.method',
+            /** @see SitemapRoute::load() */
+            'store-api.sitemap',
+            /** @see SeoUrlRoute::load() */
+            'store-api.seo.url',
+            /** @see ProductCrossSellingRoute::load() */
+            'store-api.product.cross-selling',
+            /** @see LandingPageRoute::load() */
+            'store-api.landing-page.detail',
+            /** @see NavigationRoute::load() */
+            'store-api.navigation',
+            /** @see SalutationRoute::load() */
+            'store-api.salutation',
+            /** @see CountryRoute::load() */
+            'store-api.country',
+            /** @see LanguageRoute::load() */
+            'store-api.language',
+            /** @see CountryStateRoute::load() */
+            'store-api.country.state',
+            /** @see CurrencyRoute::load() */
+            'store-api.currency',
+            /** @see CustomerGroupRegistrationSettingsRoute::load() */
+            'store-api.customer-group-registration.config',
+            /** @see FindProductVariantRoute::load() */
+            'store-api.product.find-variant'
+        ];
+
+        // Add additional routes from configuration
+        $additionalRoutes = $this->systemConfigService->getString('SwagStoreAPICache.config.additionalCacheableRoutes');
+        if (!empty($additionalRoutes)) {
+            $additionalRoutes = array_filter(
+                array_map('trim', explode("\n", $additionalRoutes)),
+                static fn (string $route) => !empty($route)
+            );
+            $routes = array_merge($routes, $additionalRoutes);
+        }
+
+        return $routes;
+    }
 
     public function __construct(
         #[Autowire(service: 'Shopware\Core\Framework\Adapter\Cache\CacheTracer')]
         private readonly AbstractCacheTracer $tracer,
         private readonly CartService $cartService,
-        private readonly Connection $connection
+        private readonly Connection $connection,
+        private readonly SystemConfigService $systemConfigService
     ) {
     }
 
@@ -104,7 +128,7 @@ class StoreAPIResponseListener
     {
         $route = $event->getRequest()->attributes->get('_route', '');
 
-        if (!\in_array($route, self::WHITELIST_CACHEABLE_STORE_API_ROUTES, true)) {
+        if (!\in_array($route, $this->getCacheableStoreApiRoutes(), true)) {
             return;
         }
 
