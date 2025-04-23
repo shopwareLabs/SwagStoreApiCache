@@ -3,11 +3,15 @@
 namespace SwagStoreAPICache\Command;
 
 use SwagStoreAPICache\Listener\StoreAPIResponseListener;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'swag:store-api-cache:debug:routes'
+)]
 class DebugCacheableRoutesCommand extends Command
 {
     protected static $defaultName = 'swag:store-api-cache:debug:routes';
