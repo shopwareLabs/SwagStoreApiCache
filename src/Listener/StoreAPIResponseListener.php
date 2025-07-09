@@ -137,6 +137,7 @@ class StoreAPIResponseListener
         $event->getResponse()->setSharedMaxAge(3600);
         $event->getResponse()->headers->removeCacheControlDirective('no-cache');
         $event->getResponse()->headers->addCacheControlDirective('stale-if-error', '3600');
+        $event->getResponse()->headers->addCacheControlDirective('stale-while-revalidate', '300');
 
         $event->getResponse()->headers->set('surrogate-key', \implode(' ', $this->tracer->get('all')));
     }
