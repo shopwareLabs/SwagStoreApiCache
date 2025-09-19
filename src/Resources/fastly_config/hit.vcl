@@ -1,5 +1,3 @@
-set req.http.swhit = "1";
-
 if (req.http.cookie:sw-states) {
    set req.http.states = req.http.cookie:sw-states;
 
