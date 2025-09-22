@@ -2,10 +2,9 @@
 unset resp.http.x-powered-by;
 
 # Cache Store-API requests
-if (req.http.swhit == "1" || req.method == "GET") {
+if (fastly_info.state ~ "HIT" || (req.method == "GET" && req.http.store-api-post == "1")) {
   unset resp.http.Sw-Context-Token;
   unset resp.http.sw-context-token;
-  unset resp.http.swhit;
 }
 
 # We use fastly.ff.visits_this_service to avoid running this logic on shield nodes. We only need to
