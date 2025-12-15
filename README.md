@@ -1,5 +1,8 @@
 # SwagStoreAPICache: EXPERIMENTAL Reverse-Proxy Cache Plugin for Shopware Store API
 
+> **Note:** This plugin is deprecated. In the scope of https://github.com/shopware/shopware/issues/7783 caching support for
+> the Store API has been integrated into the Shopware core. It will become standard feature since v6.8.0.0.
+
 SwagStoreApiCache is an **experimental** plugin developed to enhance the performance and scalability of Shopware's [Store API](https://shopware.stoplight.io/docs/store-api/38777d33d92dc-quick-start-guide) by implementing caching at the CDN edge with [Fastly](https://www.fastly.com/). It acts as a reverse-proxy cache specifically tailored to Store API requests, reducing backend load and speeding up response times.
 
 The plugin addresses a key gap in Shopware's Store API ecosystem—the lack of a built-in, advanced edge caching mechanism for dynamic and personalized Store API requests. By integrating with Fastly’s CDN caching, it enables:
