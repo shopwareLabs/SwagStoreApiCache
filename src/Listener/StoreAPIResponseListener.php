@@ -4,6 +4,7 @@ namespace SwagStoreAPICache\Listener;
 
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
+use Shopware\Core\Checkout\Customer\SalesChannel\CustomerGroupRegistrationSettingsRoute;
 use Shopware\Core\Checkout\Payment\SalesChannel\PaymentMethodRoute;
 use Shopware\Core\Checkout\Shipping\SalesChannel\ShippingMethodRoute;
 use Shopware\Core\Content\Category\SalesChannel\CategoryRoute;
@@ -12,6 +13,7 @@ use Shopware\Core\Content\Cms\SalesChannel\CmsRoute;
 use Shopware\Core\Content\LandingPage\SalesChannel\LandingPageRoute;
 use Shopware\Core\Content\Product\SalesChannel\CrossSelling\ProductCrossSellingRoute;
 use Shopware\Core\Content\Product\SalesChannel\Detail\ProductDetailRoute;
+use Shopware\Core\Content\Product\SalesChannel\FindVariant\FindProductVariantRoute;
 use Shopware\Core\Content\Product\SalesChannel\Listing\ProductListingRoute;
 use Shopware\Core\Content\Product\SalesChannel\ProductListRoute;
 use Shopware\Core\Content\Product\SalesChannel\Review\ProductReviewRoute;
@@ -20,19 +22,17 @@ use Shopware\Core\Content\Product\SalesChannel\Suggest\ProductSuggestRoute;
 use Shopware\Core\Content\Seo\SalesChannel\SeoUrlRoute;
 use Shopware\Core\Content\Sitemap\SalesChannel\SitemapRoute;
 use Shopware\Core\Framework\Adapter\Cache\AbstractCacheTracer;
-use Shopware\Core\Framework\Adapter\Cache\Http\CacheStore;
 use Shopware\Core\Framework\Adapter\Cache\Http\HttpCacheKeyGenerator;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\PlatformRequest;
 use Shopware\Core\System\Country\SalesChannel\CountryRoute;
 use Shopware\Core\System\Country\SalesChannel\CountryStateRoute;
 use Shopware\Core\System\Currency\SalesChannel\CurrencyRoute;
-use Shopware\Core\Checkout\Customer\SalesChannel\CustomerGroupRegistrationSettingsRoute;
-use Shopware\Core\Content\Product\SalesChannel\FindVariant\FindProductVariantRoute;
 use Shopware\Core\System\Language\SalesChannel\LanguageRoute;
 use Shopware\Core\System\SalesChannel\Event\SalesChannelContextSwitchEvent;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\Salutation\SalesChannel\SalutationRoute;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -42,7 +42,6 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 class StoreAPIResponseListener
 {
