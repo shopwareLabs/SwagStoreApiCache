@@ -42,4 +42,4 @@ class DebugCacheableRoutesCommand extends Command
 
         return Command::SUCCESS;
     }
-} 
+}
