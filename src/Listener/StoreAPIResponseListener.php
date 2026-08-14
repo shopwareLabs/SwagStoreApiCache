@@ -36,13 +36,13 @@ use Shopware\Core\System\Salutation\SalesChannel\SalutationRoute;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
-use SwagStoreAPICache\SwagStoreAPICache;
 
 class StoreAPIResponseListener
 {
@@ -202,14 +202,29 @@ class StoreAPIResponseListener
     {
         $j = $event->getRequest()->query->get('j');
 
-        if ($j) {
-            try {
-                $data = json_decode(rawurldecode($j), true, flags: \JSON_THROW_ON_ERROR);
-                $event->getRequest()->request->replace(\is_array($data) ? $data : []);
-                $event->getRequest()->setMethod('POST');
-            } catch (\JsonException $e) {
-                throw new BadRequestHttpException('The JSON payload is malformed.');
-            }
+        if (!$j) {
+            return;
+        }
+
+        try {
+            $json = rawurldecode($j);
+            $data = json_decode($json, true, flags: \JSON_THROW_ON_ERROR);
+
+            $request = $event->getRequest();
+            $request->initialize(
+                query:      $request->query->all(),
+                request:    $request->request->all(),
+                attributes: $request->attributes->all(),
+                cookies:    $request->cookies->all(),
+                files:      $request->files->all(),
+                server:     $request->server->all(),
+                content:    $json,
+            );
+            $request->setMethod(Request::METHOD_POST);
+
+            $request->request->replace(\is_array($data) ? $data : []);
+        } catch (\JsonException $e) {
+            throw new BadRequestHttpException('The JSON payload is malformed.');
         }
     }
 
